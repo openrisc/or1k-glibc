@@ -54,6 +54,7 @@ ENTRY(__setcontext)
 	l.lwz	r9,  (UCONTEXT_MCONTEXT +  9*4)(r12)
 	l.lwz	r10, (UCONTEXT_MCONTEXT + 10*4)(r12)
 	l.lwz	r11, (UCONTEXT_MCONTEXT + 11*4)(r12)
+	/* Restore r14-r30 even, callee saved registers.  */
 	l.lwz	r14, (UCONTEXT_MCONTEXT + 14*4)(r12)
 	l.lwz	r16, (UCONTEXT_MCONTEXT + 16*4)(r12)
 	l.lwz	r18, (UCONTEXT_MCONTEXT + 18*4)(r12)
@@ -73,7 +74,18 @@ ENTRY(__setcontext)
 END (__setcontext)
 weak_alias (__setcontext, setcontext)
 
+	/* We add a NOP here because when the unwinder is looking for the
+	   enclosing function of the link register (r9) address FDE lookup will
+	   use '$r9 - 1' finding setcontext which is wrong.  This is because in
+	   makecontext we have set r9 to the start of &__startcontext.
+
+	   If this NOP did not exist the unwinder would repeatedly find
+	   __setcontext's FDE in an infinite loop.  Modifiying/deleting the below
+	   __startcontext's FDE has no help on this.  */
+	l.nop
+
 ENTRY(__startcontext)
+
 	l.ori	r3, r14, 0
 	l.sfeq	r3, r0
 	/* If uc_link is not 0 resume there, otherwise exit.  */
