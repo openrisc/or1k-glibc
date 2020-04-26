@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  NPTL/OpenRISC version.
-   Copyright (C) 2019 Free Software Foundation, Inc.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -126,14 +126,14 @@ register tcbhead_t *__thread_self __asm__("r10");
   void *tp = ((char *) pd + TLS_PRE_TCB_SIZE + TLS_INIT_TCB_SIZE)
 
 /* Return the address of the dtv for the current thread.
-  
+
    Dereference TP, offset to dtv - really straightforward.
    Remember that we made TP point to after tcb, so we need to reverse that.  */
 
 #  define THREAD_DTV() \
   ((((tcbhead_t *)__thread_self)-1)->dtv)
 
-/* Return the thread descriptor for the current thread. 
+/* Return the thread descriptor for the current thread.
 
    Return a pointer to the TLS_PRE area where we allocated space for
    a struct pthread. Again, TP points to after tcbhead_t, compensate with

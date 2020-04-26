@@ -1,5 +1,5 @@
-/* Set current rounding direction.
-   Copyright (C) 1998-2019 Free Software Foundation, Inc.
+/* Set current rounding direction.  OpenRISC version.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ __fesetround (int round)
       _FPU_GETCW (cw);
       cw &= ~(0x3 << 1);
       cw |= round;
-      _FPU_SETCW (cw); 
+      _FPU_SETCW (cw);
       return 0;
     default:
       return round; /* A nonzero value.  */

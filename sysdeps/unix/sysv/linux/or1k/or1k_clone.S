@@ -1,5 +1,5 @@
 /* clone helper __or1k_clone for OpenRISC.
-   Copyright (C) 2019 Free Software Foundation, Inc.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ ENTRY(__or1k_clone)
 
 	/* To handle GCC varargs we need to use our __clone wrapper to pop
 	   everything from the stack for us.
-	   Now everything is placed in the registers which saves us a lot 
+	   Now everything is placed in the registers which saves us a lot
 	   of trouble.
 
 	   The userland implementation is:
@@ -35,7 +35,6 @@ ENTRY(__or1k_clone)
 	     int clone (int (*fn)(void *), void *child_stack,
 			int flags, void *arg, pid_t *ptid,
 			struct user_desc *tls, pid_t *ctid);
-
 	   The kernel entry is:
 
 	     int clone (long flags, void *child_stack, int *parent_tid,
