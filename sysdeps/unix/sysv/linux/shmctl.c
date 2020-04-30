@@ -117,12 +117,8 @@ int
 attribute_compat_text_section
 __old_shmctl (int shmid, int cmd, struct __old_shmid_ds *buf)
 {
-#if defined __ASSUME_DIRECT_SYSVIPC_SYSCALLS \
-    && !defined __ASSUME_SYSVIPC_DEFAULT_IPC_64
-  /* For architecture that have wire-up shmctl but also have __IPC_64 to a
-     value different than default (0x0), it means the compat symbol used the
-     __NR_ipc syscall.  */
-  return INLINE_SYSCALL_CALL (shmctl, shmid, cmd, buf);
+#if defined __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (shmctl, shmid, cmd | __IPC_64, buf);
 #else
   return INLINE_SYSCALL_CALL (ipc, IPCOP_shmctl, shmid, cmd, 0, buf);
 #endif
