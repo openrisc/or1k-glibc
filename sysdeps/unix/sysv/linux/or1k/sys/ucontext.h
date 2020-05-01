@@ -31,6 +31,8 @@
 typedef struct
   {
     unsigned long __gprs[32];
+    unsigned long __pc;
+    unsigned long __sr;
   } mcontext_t;
 
 /* Userlevel context.  */
