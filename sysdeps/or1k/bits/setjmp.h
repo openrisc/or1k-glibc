@@ -25,10 +25,6 @@
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
 
-#if defined __USE_MISC || defined _ASM
-# define JB_SP     0  /* GPR1 */
-#endif
-
 #ifndef _ASM
 typedef long int __jmp_buf[13];
 #endif
