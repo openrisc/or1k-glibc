@@ -28,10 +28,6 @@ or1k*)
   base_machine=or1k
   machine=or1k
 
-  # Needed for relro detection
-  libc_commonpagesize=0x2000
-  libc_relro_required=yes
-
   with_fp_cond="defined __or1k_hard_float__"
   ;;
 esac
