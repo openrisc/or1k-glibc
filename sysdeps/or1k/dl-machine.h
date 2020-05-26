@@ -21,10 +21,10 @@
 
 #define ELF_MACHINE_NAME "or1k"
 
+#include <sys/cdefs.h>
 #include <sys/param.h>
 #include <tls.h>
 #include <dl-irel.h>
-#include <assert.h>
 
 /* All relocs are Rela, no Rel */
 #define ELF_MACHINE_NO_REL 1
@@ -214,7 +214,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
-  if (__builtin_expect (r_type == R_OR1K_NONE, 0))
+  if (__glibc_unlikely (r_type == R_OR1K_NONE))
     return;
   else
     {
@@ -225,9 +225,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       if (sym != NULL
-          && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
-          && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
-          && __builtin_expect (!skip_ifunc, 1))
+          && __glibc_unlikely (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC)
+          && __glibc_likely (sym->st_shndx != SHN_UNDEF)
+          && __glibc_likely (!skip_ifunc))
         value = elf_ifunc_invoke (value);
 
       switch (r_type)
@@ -238,8 +238,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
               /* This can happen in trace mode if an object could not be
                  found.  */
               break;
-            if (__builtin_expect (sym->st_size > refsym->st_size, 0)
-                || (__builtin_expect (sym->st_size < refsym->st_size, 0)
+            if (__glibc_unlikely (sym->st_size > refsym->st_size)
+                || (__glibc_unlikely (sym->st_size < refsym->st_size)
                   && GLRO(dl_verbose)))
             {
               const char *strtab;
@@ -300,7 +300,6 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 # endif
 	    break;
           default:
-            _dl_fatal_printf("Unhandled reloc: %u\n", r_type);
             _dl_reloc_bad_type (map, r_type, 0);
             break;
         }
@@ -325,15 +324,12 @@ elf_machine_lazy_rel (struct link_map *map,
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
-  if (__builtin_expect (r_type == R_OR1K_JMP_SLOT, 1))
+  if (__glibc_likely (r_type == R_OR1K_JMP_SLOT))
       *reloc_addr += l_addr;
-  else if (__builtin_expect (r_type == R_OR1K_NONE, 0))
+  else if (__glibc_unlikely (r_type == R_OR1K_NONE))
     return;
   else
-    {
-      _dl_fatal_printf("Unhandled lazy reloc: %u\n", r_type);
-      _dl_reloc_bad_type (map, r_type, 1);
-    }
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif /* RESOLVE_MAP */
