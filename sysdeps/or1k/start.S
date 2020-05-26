@@ -44,10 +44,6 @@
 	.global	_start
 _start:
 
-	/* rtld_fini = the dynamic fini address.
-	  This is set by dl-start.S or just plain NULL if called directly. */
-	l.ori	r8, r9, 0
-
 #ifdef SHARED
 	/* Obtain a pointer to .got in r16 */
 	l.jal	.LPC0
@@ -98,6 +94,9 @@ _start:
 	   outermost frame.  */
 	l.add	r2, r0, r0
 	l.add	r9, r0, r0
+
+	/* Pass NULL for rtld_fini.  */
+	l.add	r8, r0, r0
 
 	/* Let the libc call main and exit with its return code.  */
 #ifdef SHARED

@@ -90,11 +90,6 @@ _dl_start_user:
 	l.lwz	r3, 0(r18)
 	l.sw	0(r1), r3
 
-	/* Load termination function address.
-	   Pass this in r9 to the _start function.
-	   start.S will then pass this to __libc_start_main.  */
-	l.lwz	r9, got(_dl_fini)(r16)
-
 	l.jr	r22
 	 l.nop
 
