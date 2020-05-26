@@ -42,6 +42,8 @@ Deprecated and removed features, and other changes affecting compatibility:
 * ldconfig now defaults to the new format for ld.so.cache. glibc has
   already supported this format for almost 20 years.
 
+* Support for OpenRISC on Linux has been added.
+
 Changes to build and runtime requirements:
 
 * powerpc64le requires GCC 7.4 or newer.  This is required for supporting
