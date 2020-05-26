@@ -26,11 +26,16 @@
 #include <bits/types/sigset_t.h>
 #include <bits/types/stack_t.h>
 
+/* Number of general registers.  */
+#define __NGREG	32
+#ifdef __USE_MISC
+# define NGREG	__NGREG
+#endif
 
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    unsigned long __gprs[32];
+    unsigned long __gprs[__NGREG];
     unsigned long __pc;
     unsigned long __sr;
   } mcontext_t;
