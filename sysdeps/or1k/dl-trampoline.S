@@ -78,5 +78,3 @@ _dl_runtime_resolve:
 	.cfi_endproc
 	.size	_dl_runtime_resolve, . - _dl_runtime_resolve
 
-/* TODO: _dl_runtime_profile */
-
