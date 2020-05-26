@@ -22,17 +22,17 @@
 long int
 syscall (long int syscall_number, ...)
 {
-  unsigned long arg1, arg2, arg3, arg4, arg5, arg6;
+  unsigned long int arg1, arg2, arg3, arg4, arg5, arg6;
   va_list arg;
   long int ret;
 
   va_start (arg, syscall_number);
-  arg1 = va_arg (arg, unsigned long);
-  arg2 = va_arg (arg, unsigned long);
-  arg3 = va_arg (arg, unsigned long);
-  arg4 = va_arg (arg, unsigned long);
-  arg5 = va_arg (arg, unsigned long);
-  arg6 = va_arg (arg, unsigned long);
+  arg1 = va_arg (arg, unsigned long int);
+  arg2 = va_arg (arg, unsigned long int);
+  arg3 = va_arg (arg, unsigned long int);
+  arg4 = va_arg (arg, unsigned long int);
+  arg5 = va_arg (arg, unsigned long int);
+  arg6 = va_arg (arg, unsigned long int);
   va_end (arg);
 
   ret = INTERNAL_SYSCALL_NCS (syscall_number, 6, arg1, arg2, arg3, arg4,

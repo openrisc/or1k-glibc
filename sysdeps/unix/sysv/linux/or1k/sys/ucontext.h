@@ -35,15 +35,15 @@
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    unsigned long __gprs[__NGREG];
-    unsigned long __pc;
-    unsigned long __sr;
+    unsigned long int __gprs[__NGREG];
+    unsigned long int __pc;
+    unsigned long int __sr;
   } mcontext_t;
 
 /* Userlevel context.  */
 typedef struct ucontext_t
   {
-    unsigned long __uc_flags;    /* getcontext() 1, ... */
+    unsigned long int __uc_flags;/* getcontext() 1, ... */
     struct ucontext_t *uc_link;  /* user setup before makecontext () */
     stack_t uc_stack;            /* user setup before make context() */
     mcontext_t uc_mcontext;      /* getcontext() regs, v2    : makecontext() func, sp, RA=__startcontext, args injected */

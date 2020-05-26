@@ -40,18 +40,18 @@ void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
   extern void __startcontext (void);
-  unsigned long *sp;
+  unsigned long int *sp;
   va_list ap;
   int i;
 
-  sp = (unsigned long *)
+  sp = (unsigned long int *)
     ((uintptr_t) ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
 
   /* Allocate stack arguments.  */
   sp -= argc < 6 ? 0 : argc - 6;
 
   /* Keep the stack aligned.  */
-  sp = (unsigned long*) (((uintptr_t) sp) & -4L);
+  sp = (unsigned long int *) (((uintptr_t) sp) & -4L);
 
   /* Keep uc_link in r14.  */
   ucp->uc_mcontext.__gprs[14] = (uintptr_t) ucp->uc_link;
@@ -67,9 +67,9 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   va_start (ap, argc);
   for (i = 0; i < argc; ++i)
     if (i < 6)
-      ucp->uc_mcontext.__gprs[i + 3] = va_arg (ap, unsigned long);
+      ucp->uc_mcontext.__gprs[i + 3] = va_arg (ap, unsigned long int);
     else
-      sp[i - 6] = va_arg (ap, unsigned long);
+      sp[i - 6] = va_arg (ap, unsigned long int);
 
   va_end (ap);
 }
