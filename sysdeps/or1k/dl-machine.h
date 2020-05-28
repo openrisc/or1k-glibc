@@ -255,17 +255,10 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
             break;
 #endif
           case R_OR1K_32:
-	    {
-	      /* Handle mis-aligned offsets */
-	      struct unaligned
-		{
-		  Elf32_Addr x;
-		} __attribute__ ((packed, may_alias));
-
-	      /* Support relocations on mis-aligned offsets.  */
-	      ((struct unaligned *) reloc_addr)->x = value + reloc->r_addend;
-	      break;
-	    }
+	    /* Support relocations on mis-aligned offsets.  */
+	    value += reloc->r_addend;
+	    memcpy (reloc_addr_arg, &value, 4);
+	    break;
 	  case R_OR1K_GLOB_DAT:
 	  case R_OR1K_JMP_SLOT:
 	    *reloc_addr = value + reloc->r_addend;
