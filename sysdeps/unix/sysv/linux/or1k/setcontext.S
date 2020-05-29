@@ -94,11 +94,9 @@ ENTRY(__startcontext)
 
 #ifdef SHARED
 	/* Obtain a pointer to .got in r16 */
-	l.jal	.LPC0
-	 l.nop
-.LPC0:
-	l.movhi	r16, gotpchi(_GLOBAL_OFFSET_TABLE_+(.-.LPC0))
-	l.ori	r16, r16, gotpclo(_GLOBAL_OFFSET_TABLE_+(.-.LPC0))
+	l.jal	0x8
+	 l.movhi r16, gotpchi(_GLOBAL_OFFSET_TABLE_-4)
+	l.ori	r16, r16, gotpclo(_GLOBAL_OFFSET_TABLE_+0)
 	l.add	r16, r16, r9
 	l.lwz	r16, got(exit)(r16)
 	l.jr	r16

@@ -18,8 +18,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define TLS_LOAD_GOT \
-  ({ register long lr __asm__ ("r9");					\
-     long got;								\
+  ({ register long int lr __asm__ ("r9");				\
+     long int got;							\
      asm ("l.jal    0x8\n\t"						\
 	  " l.movhi %0, gotpchi(_GLOBAL_OFFSET_TABLE_-4)\n\t"		\
 	  "l.ori    %0, %0, gotpclo(_GLOBAL_OFFSET_TABLE_+0)\n\t"	\
@@ -55,7 +55,7 @@
      l.lbs   r17, 0(r17)  */
 
 #define TLS_IE(x)					\
-  ({ register long __tls __asm__ ("r10");		\
+  ({ register long int __tls __asm__ ("r10");		\
      void *__tlsie;					\
      asm ("l.movhi  %0, gottpoffhi(" #x ")\n\t"		\
 	  "l.add    %0, %0, %1\n\t"			\
@@ -73,7 +73,7 @@
      l.lbs   r17, 0(r17)  */
 
 #define TLS_LE(x)					\
-  ({ register long __tls __asm__ ("r10");		\
+  ({ register long int __tls __asm__ ("r10");		\
      void *__tlsle;					\
      asm ("l.movhi  %0, tpoffha(" #x ")\n\t"		\
 	  "l.add    %0, %0, %1\n\t"			\

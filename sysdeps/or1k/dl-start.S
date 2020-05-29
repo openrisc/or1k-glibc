@@ -21,7 +21,7 @@
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
    it's return value is the user program's entry point.  */
-ENTRY(_start)
+ENTRY (_start)
 	/* Count arguments in r11 */
 	l.ori	r3, r1, 0
 	l.movhi	r11, 0
@@ -36,12 +36,10 @@ ENTRY(_start)
 	/* store argument counter to stack.  */
 	l.sw	0(r1), r11
 
-	l.jal	.LPC0
-	 l.nop
 	/* Load the PIC register.  */
-.LPC0:
-	l.movhi	r16, gotpchi(_GLOBAL_OFFSET_TABLE_+(.-.LPC0))
-	l.ori	r16, r16, gotpclo(_GLOBAL_OFFSET_TABLE_+(.-.LPC0))
+	l.jal	0x8
+	 l.movhi r16, gotpchi(_GLOBAL_OFFSET_TABLE_-4)
+	l.ori	r16, r16, gotpclo(_GLOBAL_OFFSET_TABLE_+0)
 	l.add	r16, r16, r9
 
 	l.ori	r3, r1, 0
@@ -93,4 +91,4 @@ _dl_start_user:
 	l.jr	r22
 	 l.nop
 
-END(_start)
+END (_start)

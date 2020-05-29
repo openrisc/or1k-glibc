@@ -48,14 +48,14 @@ register tcbhead_t *__thread_self __asm__("r10");
 
 /* The TP points to the start of the TLS block.
    As I understand it, this isn't strictly that "TP points to DTV" - it's
-   more where to place the TCB in the TLS block. This will place it in 
+   more where to place the TCB in the TLS block. This will place it in
    the beginning.
 
    Layout:
     ------------------------------------
     | PRE | TCB | TLS MEMORY ..        |
    ------------------------------------
-                 ^ r10 / TP
+		 ^ r10 / TP
 
    PRE is the struct pthread described below
    TCB is tcbhead_t

@@ -40,14 +40,12 @@ static inline Elf32_Addr *
 or1k_get_got (void)
 {
   Elf32_Addr *got;
-  Elf32_Addr linkreg;
-  __asm__("l.ori   %0, r9, 0\n"
-    "l.jal  8\n"
-    "l.movhi  %1, gotpchi(_GLOBAL_OFFSET_TABLE_-4)\n"
-    "l.ori  %1, %1, gotpclo(_GLOBAL_OFFSET_TABLE_+0)\n"
-    "l.add  %1, %1, r9\n"
-    "l.ori  r9, %0, 0\n"
-    : "=r" (linkreg), "=r" (got));
+  register long int linkreg asm ("r9");
+  asm ("l.jal    0x8\n"
+       " l.movhi %0, gotpchi(_GLOBAL_OFFSET_TABLE_-4)\n"
+       "l.ori    %0, %0, gotpclo(_GLOBAL_OFFSET_TABLE_+0)\n"
+       "l.add    %0, %0, %1\n"
+       : "=r" (got), "=r" (linkreg));
 
   return got;
 }
@@ -72,12 +70,10 @@ elf_machine_load_address (void)
   Elf32_Addr dyn;
   Elf32_Addr *got = or1k_get_got();
 
-  __asm__ __volatile__ (
-    "l.movhi %0, gotoffhi(_DYNAMIC);"
-    "l.ori %0, %0, gotofflo(_DYNAMIC);"
-    "l.add %0, %0, %1;"
-    : "=r"(dyn) : "r"(got)
-    );
+  asm ("l.movhi %0, gotoffhi(_DYNAMIC);"
+       "l.ori   %0, %0, gotofflo(_DYNAMIC);"
+       "l.add   %0, %0, %1;"
+       : "=r"(dyn) : "r"(got));
 
   return dyn - *got;
 }
