@@ -88,6 +88,10 @@ _dl_start_user:
 	l.lwz	r3, 0(r18)
 	l.sw	0(r1), r3
 
+	/* Pass _dl_fini function address to _start.
+	   Next start.S will then pass this as rtld_fini to __libc_start_main.  */
+	l.lwz	r3, got(_dl_fini)(r16)
+
 	l.jr	r22
 	 l.nop
 

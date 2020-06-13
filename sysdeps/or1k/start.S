@@ -36,20 +36,7 @@
 
 ENTRY (ENTRY_POINT)
 
-#ifdef SHARED
-	/* Obtain a pointer to .got in r16 */
-	l.jal	0x8
-	 l.movhi r16, gotpchi(_GLOBAL_OFFSET_TABLE_-4)
-	l.ori	r16, r16, gotpclo(_GLOBAL_OFFSET_TABLE_+0)
-	l.add	r16, r16, r9
-#endif
-
-#ifdef SHARED
-	l.lwz	r3, got(main)(r16)
-#else
-	l.movhi r3, hi(main)
-	l.ori	r3, r3, lo(main)
-#endif
+	/* Setup Arguments to the __libc_start_main function.  */
 
 	/* Take values for argc and argv off the stack.
 	   These will be passed as arguments two and three to main
@@ -57,20 +44,33 @@ ENTRY (ENTRY_POINT)
 	l.lwz	r4, 0(r1)
 	l.addi	r5, r1, 4
 
-	/* Put the constructor and destructor initialization as args four and
-	   five into r6 and r7.  */
+	/* Pass in rtld_fini from dl-start.S.  */
+	l.or	r8, r3, r3
+
 #ifdef SHARED
+	/* Obtain a pointer to .got in r16 */
+	l.jal	0x8
+	 l.movhi r16, gotpchi(_GLOBAL_OFFSET_TABLE_-4)
+	l.ori	r16, r16, gotpclo(_GLOBAL_OFFSET_TABLE_+0)
+	l.add	r16, r16, r9
+
+	/* Pass in the the main symbol.  */
+	l.lwz	r3, got(main)(r16)
+
+	/* Pass init and fini.  */
 	l.lwz	r6, got(__libc_csu_init)(r16)
 	l.lwz	r7, got(__libc_csu_fini)(r16)
 #else
+	/* Pass in the the main symbol.  */
+	l.movhi r3, hi(main)
+	l.ori	r3, r3, lo(main)
+
+	/* Pass init and fini.  */
 	l.movhi	r6, hi(__libc_csu_init)
 	l.ori	r6, r6, lo(__libc_csu_init)
 	l.movhi	r7, hi(__libc_csu_fini)
 	l.ori	r7, r7, lo(__libc_csu_fini)
 #endif
-	/* Pass NULL for rtld_fini.  */
-	l.movhi	r8, 0x0
-
 	/* Push stack limit onto the stack.
 	   This provides the highest stack address to user code (as stack grows
 	   downwards.
