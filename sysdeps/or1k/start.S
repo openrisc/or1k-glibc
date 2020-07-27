@@ -44,15 +44,15 @@ ENTRY (ENTRY_POINT)
 	l.lwz	r4, 0(r1)
 	l.addi	r5, r1, 4
 
-	/* Pass in rtld_fini from dl-start.S.  */
-	l.or	r8, r3, r3
-
-#ifdef SHARED
+#ifdef PIC
 	/* Obtain a pointer to .got in r16 */
 	l.jal	0x8
 	 l.movhi r16, gotpchi(_GLOBAL_OFFSET_TABLE_-4)
 	l.ori	r16, r16, gotpclo(_GLOBAL_OFFSET_TABLE_+0)
 	l.add	r16, r16, r9
+
+	/* Pass in rtld_fini from dl-start.S.  */
+	l.or	r8, r3, r3
 
 	/* Pass in the the main symbol.  */
 	l.lwz	r3, got(main)(r16)
@@ -70,6 +70,9 @@ ENTRY (ENTRY_POINT)
 	l.ori	r6, r6, lo(__libc_csu_init)
 	l.movhi	r7, hi(__libc_csu_fini)
 	l.ori	r7, r7, lo(__libc_csu_fini)
+
+	/* Pass in rtld_fini as NULL as there is none in static builds.  */
+	l.movhi	r8, 0x0
 #endif
 	/* Push stack limit onto the stack.
 	   This provides the highest stack address to user code (as stack grows
@@ -88,7 +91,7 @@ ENTRY (ENTRY_POINT)
 	l.movhi	r9, 0x0
 
 	/* Let the libc call main and exit with its return code.  */
-#ifdef SHARED
+#ifdef PIC
 	l.j	plt(__libc_start_main)
 #else
 	l.j	__libc_start_main
