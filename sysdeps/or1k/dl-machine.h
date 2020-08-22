@@ -73,7 +73,7 @@ elf_machine_load_address (void)
   asm ("l.movhi %0, gotoffhi(_DYNAMIC);"
        "l.ori   %0, %0, gotofflo(_DYNAMIC);"
        "l.add   %0, %0, %1;"
-       : "=r"(dyn) : "r"(got));
+       : "=&r"(dyn) : "r"(got));
 
   return dyn - *got;
 }
